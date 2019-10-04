@@ -10,6 +10,18 @@ public class Level {
 	
 	}
 	
+	public Level(Level other) {
+		this.length = other.length;
+		this.width = other.width;
+		map = new int[length][width];
+		
+		for(int i = 0; i < length; i++) {
+			for(int j = 0; j < width; j++) {
+				this.map[i][j] = other.getMap()[i][j];
+			}
+		}
+	}
+	
 	
 	public void printResult() {
 		for(int i = 0; i < length; i++) {
@@ -45,9 +57,9 @@ public class Level {
 
 
 
-	public void placeVehicle(Vehicle v) {
+	public boolean placeVehicle(Vehicle v) {
 		Position position = getFittingPositin(v);
-		placeVehicle(position, v);
+		return placeVehicle(position, v);
 	}
 	
 	
@@ -106,8 +118,10 @@ public class Level {
 		return res;
 	}
 
-	private void placeVehicle(Position position, Vehicle v) {
-		Vehicle VehicletoPlace = position.isRotated()? new Vehicle(v.number, v.width, v.length) : v;
+	private boolean placeVehicle(Position position, Vehicle v) {
+		if(position == null)
+			return false;
+		Vehicle VehicletoPlace = position.isRotated() ? new Vehicle(v.number, v.width, v.length) : v;
 		
 		for(int i = position.getY(); i < position.getY() + VehicletoPlace.length; i++) {
 			for(int j = position.getX(); j < position.getX() + VehicletoPlace.width ; j++) {
@@ -116,6 +130,8 @@ public class Level {
 				map[i][j] = v.number;
 			}
 		}
+		
+		return true;
 		
 		
 	}
@@ -132,6 +148,14 @@ public class Level {
 	
 	public int[][] getMap() {
 		return map;
+	}
+
+	public void removeVehicleFromMap(int number) {
+		for(int i = 0; i < length; i++)
+			for(int j = 0; j < width; j++)
+				if(map[i][j] == number)
+					map[i][j] = 0;
+		
 	}
 	
 }
