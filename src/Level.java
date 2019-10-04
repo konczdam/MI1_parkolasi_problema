@@ -109,8 +109,8 @@ public class Level {
 	private void placeVehicle(Position position, Vehicle v) {
 		Vehicle VehicletoPlace = position.isRotated()? new Vehicle(v.number, v.width, v.length) : v;
 		
-		for(int i = position.getY(); i < position.getY() + v.width; i++) {
-			for(int j = position.getX(); j < position.getX() + v.length ; j++) {
+		for(int i = position.getY(); i < position.getY() + VehicletoPlace.length; i++) {
+			for(int j = position.getX(); j < position.getX() + VehicletoPlace.width ; j++) {
 				if(map[i][j] != 0)
 					throw new RuntimeException("problem");
 				map[i][j] = v.number;
