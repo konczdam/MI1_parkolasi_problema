@@ -52,6 +52,8 @@ public void printresults() {
 	
 	public void solve() {
 		placeBiggestVehicles();
+		for(Vehicle v: vehiclesToPlace)
+			level.placeVehicle(v);
 	}
 	
 	
@@ -63,6 +65,7 @@ public void printresults() {
 			level.placeVehicle(v);
 			
 		}
+		vehiclesToPlace.removeAll(bigVehicles);
 	}
 
 	

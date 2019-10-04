@@ -26,6 +26,22 @@ public class Level {
 		}
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder res = new StringBuilder();
+		for(int i = 0; i < length; i++) {
+			for(int j = 0; j < width; j++) {
+				res.append(map[i][j]);
+				
+				if(j == width - 1)
+					res.append('\n');
+				else
+					res.append('\t');
+			}
+		}
+		return res.toString();
+		
+	}
 
 
 
@@ -69,9 +85,10 @@ public class Level {
 
 	private Position checkforBasicPosition(int y, int x, Vehicle v) {
 		boolean edged = false;
-		
-		for(int i = y; i < y + v.length; i++) {
-			for(int j = x; j < x + v.width ; j++) {
+		int numOfBookedPlaces = 0;
+		for(int i = y; i < Math.min(y + v.length, length); i++) {
+			for(int j = x; j < Math.min(x + v.width, width) ; j++) {
+				numOfBookedPlaces++;
 				if(map[i][j] != 0)
 					return null;
 				if(i == length - 1 || j == width - 1)
@@ -79,12 +96,13 @@ public class Level {
 					
 			}
 		}
-		return new Position(false, y,x, edged);
+		return numOfBookedPlaces == v.length * v.width ? new Position(false, y,x, edged) : null;
 	}
 
 	private Position checkforRotatedPosition(int i, int j, Vehicle v) {
 		Position res = checkforBasicPosition(i, j, new Vehicle(v.number, v.width, v.length));
-		res.setRotated(true);
+		if(res!= null)
+			res.setRotated(true);
 		return res;
 	}
 
