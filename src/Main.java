@@ -6,7 +6,7 @@ public class Main {
 //		
 //		for(Vehicle v: game.getVehiclesToPlace())
 //			System.out.println(v.getLength() +" " + v.getWidth());
-		game.solve();
+		game.solve(true);
 //		game.printresults();
 	}
 }

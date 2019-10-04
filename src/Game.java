@@ -1,6 +1,5 @@
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 import java.util.function.Predicate;
@@ -58,6 +57,11 @@ public class Game {
 		level.printResult();
 	}
 
+	public boolean solve(boolean asd) {
+		placeBiggestVehicles();
+		return solve();
+	}
+	
 	public boolean solve() {
 //		if(vehiclesToPlace.size() == 1) {
 //			System.out.println("mindj kész");
@@ -69,7 +73,6 @@ public class Game {
 			System.exit(0);
 		}
 		
-		placeBiggestVehicles();
 		
 		
 		
@@ -77,7 +80,7 @@ public class Game {
 			Vehicle nextVehicle = vehiclesToPlace.get(i);
 			boolean asd = level.placeVehicle(nextVehicle);
 			if(!asd)
-				continue;
+				return false;
 			vehiclesToPlace.remove(nextVehicle);
 			
 			Game newGame = new Game(this);
@@ -86,7 +89,9 @@ public class Game {
 			
 			else {
 				level.removeVehicleFromMap(nextVehicle.number);
-				vehiclesToPlace.add(nextVehicle);
+				vehiclesToPlace.add(0, nextVehicle);
+				if(nextVehicle.getArea() == 1)
+					return false;
 			}
 				
 			
@@ -120,6 +125,11 @@ public class Game {
 
 	public List<Vehicle> getVehiclesToPlace() {
 		return vehiclesToPlace;
+	}
+	
+	@Override
+	public String toString() {
+		return level.toString();
 	}
 
 }
