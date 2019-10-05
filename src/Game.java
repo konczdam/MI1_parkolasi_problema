@@ -89,7 +89,7 @@ public class Game {
 			
 			else {
 				level.removeVehicleFromMap(nextVehicle.number);
-				vehiclesToPlace.add(0, nextVehicle);
+				vehiclesToPlace.add(1, nextVehicle);
 				if(nextVehicle.getArea() == 1)
 					return false;
 			}
@@ -99,7 +99,6 @@ public class Game {
 		if(vehiclesToPlace.size() != 0)
 			return false;
 		
-		printresults();
 		return true;
 	}
 

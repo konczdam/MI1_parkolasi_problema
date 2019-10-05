@@ -85,6 +85,12 @@ public class Level {
 
 
 	private Position chooseEdgedPosition(Position basic, Position rotated) {
+		if(basic != null && basic.isEdged())
+			return basic;
+		
+		if(rotated != null && rotated.isEdged())
+			return rotated;
+		
 		if(basic != null && rotated == null)
 			return basic;
 		if(basic == null && rotated != null)
@@ -108,7 +114,7 @@ public class Level {
 					
 			}
 		}
-		return numOfBookedPlaces == v.length * v.width ? new Position(false, y,x, edged) : null;
+		return numOfBookedPlaces == v.getArea()? new Position(false, y,x, edged) : null;
 	}
 
 	private Position checkforRotatedPosition(int i, int j, Vehicle v) {
