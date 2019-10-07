@@ -9,12 +9,7 @@ public class Vehicle implements Comparable<Vehicle> {
 		area = width*length;
 	}
 
-	public Vehicle(Vehicle other) {
-		this.number = other.number;
-		this.length = other.length;
-		this.width = other.width;
-		area = width*length;
-	}
+
 	
 	public int getNumber() {
 		return number;

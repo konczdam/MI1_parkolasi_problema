@@ -1,6 +1,8 @@
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Level {
 	
@@ -14,17 +16,7 @@ public class Level {
 	
 	}
 	
-	public Level(Level other) {
-		this.length = other.length;
-		this.width = other.width;
-		map = new int[length][width];
-		
-		for(int i = 0; i < length; i++) {
-			for(int j = 0; j < width; j++) {
-				this.map[i][j] = other.getMap()[i][j];
-			}
-		}
-	}
+
 	
 	
 	public void printResult() {
@@ -71,19 +63,23 @@ public class Level {
 
 	public List<Position> getFittingPositin(Vehicle v) {
 		Position basic, rotated;
-		
+		List<Position> res = new ArrayList<Position>();
 		for(int i = 0; i < length; i++) {
 			for(int j = 0; j < width; j++) {
 				basic = checkforBasicPosition(i,j, v);
 				rotated = checkforRotatedPosition(i,j,v);
 				
 				if(basic != null || rotated != null)
-					return chooseEdgedPosition( basic, rotated );
+					res.addAll(chooseEdgedPosition( basic, rotated ).stream().filter((Position p) -> {
+						if(res.isEmpty())
+							return true;
+						Position last = res.get(res.size() -1 );
+						return p.getX() != last.getX() && p.getY() != last.getY();
+					}).collect(Collectors.toList()));
 			}
 		}
 
-		
-		return null;
+		return res;
 	}
 
 
@@ -166,6 +162,28 @@ public class Level {
 			for(int j = 0; j < width; j++)
 				if(map[i][j] == number)
 					map[i][j] = 0;
+		
+	}
+
+	public void validate(List<Vehicle> backup) {
+		Map<Integer, Integer> map = new HashMap<>(backup.size());
+		
+		for(int i = 1; i <= backup.size(); i++)
+			map.put(i, 0);
+		
+		for(int i = 0; i < length; i++)
+			for(int j = 0; j < width; j++) {
+				if(map.get(this.map[i][j]) != null)
+				
+				map.put(
+						this.map[i][j], 
+						map.get(this.map[i][j]) + 1);
+			}
+		
+		backup.stream().forEach(v -> {
+			System.out.println(v.number + " elvárt: " + v.getArea() + ", valójában: " + map.get(v.number));
+		});
+		
 		
 	}
 	

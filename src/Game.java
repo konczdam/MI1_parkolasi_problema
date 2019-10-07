@@ -11,6 +11,7 @@ public class Game {
 	private Level level;
 	private int numberOfVehicles;
 	private List<Vehicle> vehiclesToPlace;
+	private List<Vehicle> backup;
 	Predicate<Vehicle> bigVehiclePredicate;
 
 	public Game(InputStream inputStrem) {
@@ -23,15 +24,12 @@ public class Game {
 		initvehicles(in);
 		initPredicate();
 		vehiclesToPlace = vehiclesToPlace.stream().sorted().collect(Collectors.toList());
-
+		
+//		System.out.println(vehiclesToPlace.stream().mapToInt(Vehicle::getArea).sum());
+//		backup = new ArrayList<>(vehiclesToPlace);
 	}
 
-	public Game(Game other) {
-		this.level = new Level(other.level);
-		this.numberOfVehicles = other.numberOfVehicles;
-		this.vehiclesToPlace = new ArrayList<>(other.vehiclesToPlace);
-		this.bigVehiclePredicate = other.bigVehiclePredicate;
-	}
+
 
 	private void initvehicles(Scanner in) {
 		numberOfVehicles = in.nextInt();
@@ -70,6 +68,7 @@ public class Game {
 //		Collections.sort(vehiclesToPlace);
 		if (vehiclesToPlace.size() == 0) {
 			this.printresults();
+//			level.validate(backup);
 			return true;
 		}
 
@@ -84,14 +83,20 @@ public class Game {
 						return false;
 					vehiclesToPlace.remove(nextVehicle);
 
-					Game newGame = new Game(this);
-					if(newGame.solve())
+					//Game newGame = new Game(this);
+					if(solve())
 						return true;
+					
+					else {
+						level.removeVehicleFromMap(nextVehicle.getNumber());
+					}
 				}
 
 			}
 			
-				return false;
+			if(!vehiclesToPlace.contains(nextVehicle))
+				vehiclesToPlace.add(0,nextVehicle);
+			return false; 
 
 	
 	}
