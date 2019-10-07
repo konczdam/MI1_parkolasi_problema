@@ -70,43 +70,30 @@ public class Game {
 //		Collections.sort(vehiclesToPlace);
 		if (vehiclesToPlace.size() == 0) {
 			this.printresults();
-			System.exit(0);
+			return true;
 		}
 
-		for (int i = 0; i < vehiclesToPlace.size(); i++) {
-			Vehicle nextVehicle = vehiclesToPlace.get(i);
+		
+			Vehicle nextVehicle = vehiclesToPlace.get(0);
 
 			List<Position> fittingPositions = level.getFittingPositin(nextVehicle);
 			if (fittingPositions != null && !fittingPositions.isEmpty()) {
 				for (Position p : fittingPositions) {
-
 					boolean asd = level.placeVehicle(p, nextVehicle);
 					if (!asd)
 						return false;
 					vehiclesToPlace.remove(nextVehicle);
 
 					Game newGame = new Game(this);
-					if (newGame.solve())
+					if(newGame.solve())
 						return true;
-
-					else {
-						level.removeVehicleFromMap(nextVehicle.number);
-						vehiclesToPlace.add(1, nextVehicle);
-						if (nextVehicle.getArea() == 1)
-							return false;
-					}
-
 				}
 
 			}
-			else
+			
 				return false;
 
-		}
-		if (vehiclesToPlace.size() != 0)
-			return false;
-
-		return true;
+	
 	}
 
 	private void placeBiggestVehicles() {
