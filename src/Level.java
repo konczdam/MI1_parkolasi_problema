@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class Level {
 	
 	private int length, width;
@@ -58,14 +62,14 @@ public class Level {
 
 
 	public boolean placeVehicle(Vehicle v) {
-		Position position = getFittingPositin(v);
-		return placeVehicle(position, v);
+		List<Position> position = getFittingPositin(v);
+		return placeVehicle(position.get(0), v);
 	}
 	
 	
 
 
-	private Position getFittingPositin(Vehicle v) {
+	public List<Position> getFittingPositin(Vehicle v) {
 		Position basic, rotated;
 		
 		for(int i = 0; i < length; i++) {
@@ -84,20 +88,21 @@ public class Level {
 
 
 
-	private Position chooseEdgedPosition(Position basic, Position rotated) {
-		if(basic != null && basic.isEdged())
-			return basic;
+	private List<Position> chooseEdgedPosition(Position basic, Position rotated) {
+		List<Position> res = new ArrayList<>();
 		
-		if(rotated != null && rotated.isEdged())
-			return rotated;
+		if(basic != null)
+			res.add(basic);
+		if(rotated != null)
+			res.add(rotated);
 		
-		if(basic != null && rotated == null)
-			return basic;
-		if(basic == null && rotated != null)
-			return rotated;
-		if(basic.isEdged())
-			return basic;
-		return rotated;
+		if(res.size() == 2 && !basic.isEdged() && rotated.isEdged()) {
+			res.remove(rotated);
+			res.add(0,rotated);
+		}
+		
+		return res;
+		
 	}
 
 
@@ -124,7 +129,7 @@ public class Level {
 		return res;
 	}
 
-	private boolean placeVehicle(Position position, Vehicle v) {
+	public boolean placeVehicle(Position position, Vehicle v) {
 		if(position == null)
 			return false;
 		Vehicle VehicletoPlace = position.isRotated() ? new Vehicle(v.number, v.width, v.length) : v;

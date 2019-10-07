@@ -30,4 +30,6 @@ public class Position {
 	public void setRotated(boolean rotated) {
 		this.rotated = rotated;
 	}
+
+	
 }

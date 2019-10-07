@@ -22,10 +22,10 @@ public class Game {
 
 		initvehicles(in);
 		initPredicate();
-		vehiclesToPlace = vehiclesToPlace.stream().sorted().collect( Collectors.toList());
+		vehiclesToPlace = vehiclesToPlace.stream().sorted().collect(Collectors.toList());
 
 	}
-	
+
 	public Game(Game other) {
 		this.level = new Level(other.level);
 		this.numberOfVehicles = other.numberOfVehicles;
@@ -61,48 +61,53 @@ public class Game {
 		placeBiggestVehicles();
 		return solve();
 	}
-	
+
 	public boolean solve() {
 //		if(vehiclesToPlace.size() == 1) {
 //			System.out.println("mindj kész");
 //		}
-		
+
 //		Collections.sort(vehiclesToPlace);
-		if(vehiclesToPlace.size() == 0) {
+		if (vehiclesToPlace.size() == 0) {
 			this.printresults();
 			System.exit(0);
 		}
-		
-		
-		
-		
-		for(int i = 0; i < vehiclesToPlace.size(); i++) {
+
+		for (int i = 0; i < vehiclesToPlace.size(); i++) {
 			Vehicle nextVehicle = vehiclesToPlace.get(i);
-			boolean asd = level.placeVehicle(nextVehicle);
-			if(!asd)
-				return false;
-			vehiclesToPlace.remove(nextVehicle);
-			
-			Game newGame = new Game(this);
-			if(newGame.solve())
-				return true;
-			
-			else {
-				level.removeVehicleFromMap(nextVehicle.number);
-				vehiclesToPlace.add(1, nextVehicle);
-				if(nextVehicle.getArea() == 1)
-					return false;
+
+			List<Position> fittingPositions = level.getFittingPositin(nextVehicle);
+			if (fittingPositions != null && !fittingPositions.isEmpty()) {
+				for (Position p : fittingPositions) {
+
+					boolean asd = level.placeVehicle(p, nextVehicle);
+					if (!asd)
+						return false;
+					vehiclesToPlace.remove(nextVehicle);
+
+					Game newGame = new Game(this);
+					if (newGame.solve())
+						return true;
+
+					else {
+						level.removeVehicleFromMap(nextVehicle.number);
+						vehiclesToPlace.add(1, nextVehicle);
+						if (nextVehicle.getArea() == 1)
+							return false;
+					}
+
+				}
+
 			}
-				
-			
+			else
+				return false;
+
 		}
-		if(vehiclesToPlace.size() != 0)
+		if (vehiclesToPlace.size() != 0)
 			return false;
-		
+
 		return true;
 	}
-
-	
 
 	private void placeBiggestVehicles() {
 		List<Vehicle> bigVehicles = getVehiclesToPlace().stream().filter(bigVehiclePredicate)
@@ -125,7 +130,7 @@ public class Game {
 	public List<Vehicle> getVehiclesToPlace() {
 		return vehiclesToPlace;
 	}
-	
+
 	@Override
 	public String toString() {
 		return level.toString();
