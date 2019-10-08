@@ -11,7 +11,6 @@ public class Game {
 	private Level level;
 	private int numberOfVehicles;
 	private List<Vehicle> vehiclesToPlace;
-	private List<Vehicle> backup;
 	Predicate<Vehicle> bigVehiclePredicate;
 
 	public Game(InputStream inputStrem) {
@@ -25,8 +24,7 @@ public class Game {
 		initPredicate();
 		vehiclesToPlace = vehiclesToPlace.stream().sorted().collect(Collectors.toList());
 		
-//		System.out.println(vehiclesToPlace.stream().mapToInt(Vehicle::getArea).sum());
-//		backup = new ArrayList<>(vehiclesToPlace);
+
 	}
 
 
@@ -38,6 +36,7 @@ public class Game {
 		IntStream.range(1, numberOfVehicles + 1).forEach(i -> {
 			vehiclesToPlace.add(new Vehicle(i, in.nextInt(), in.nextInt()));
 		});
+		
 	}
 
 	private void initPredicate() {
@@ -61,14 +60,9 @@ public class Game {
 	}
 
 	public boolean solve() {
-//		if(vehiclesToPlace.size() == 1) {
-//			System.out.println("mindj kész");
-//		}
 
-//		Collections.sort(vehiclesToPlace);
 		if (vehiclesToPlace.size() == 0) {
 			this.printresults();
-//			level.validate(backup);
 			return true;
 		}
 
@@ -82,14 +76,12 @@ public class Game {
 					if (!asd)
 						return false;
 					vehiclesToPlace.remove(nextVehicle);
-
-					//Game newGame = new Game(this);
 					if(solve())
 						return true;
 					
-					else {
+					else 
 						level.removeVehicleFromMap(nextVehicle.getNumber());
-					}
+					
 				}
 
 			}
