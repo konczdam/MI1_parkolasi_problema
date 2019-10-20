@@ -21,8 +21,8 @@ public class Game {
 		level = new Level(length, width);
 
 		initvehicles(in);
-		initPredicate();
 		vehiclesToPlace = vehiclesToPlace.stream().sorted().collect(Collectors.toList());
+		initPredicate();
 		
 
 	}
@@ -54,36 +54,31 @@ public class Game {
 		level.printResult();
 	}
 
-	public boolean solve(boolean asd) {
-		placeBiggestVehicles();
-		return solve();
-	}
-
 	public boolean solve() {
 
 		if (vehiclesToPlace.size() == 0) {
 			this.printresults();
 			return true;
 		}
-
 		
 			Vehicle nextVehicle = vehiclesToPlace.get(0);
 
 			List<Position> fittingPositions = level.getFittingPositin(nextVehicle);
 			if (fittingPositions != null && !fittingPositions.isEmpty()) {
 				for (Position p : fittingPositions) {
-					boolean asd = level.placeVehicle(p, nextVehicle);
-					if (!asd)
+					
+					boolean vehiclePlacedSuccesfully = level.placeVehicle(p, nextVehicle);
+					if (!vehiclePlacedSuccesfully)
 						return false;
+					
 					vehiclesToPlace.remove(nextVehicle);
+					
 					if(solve())
 						return true;
-					
 					else 
-						level.removeVehicleFromMap(nextVehicle.getNumber());
+						level.removeVehicleFromMap(nextVehicle, p);
 					
 				}
-
 			}
 			
 			if(!vehiclesToPlace.contains(nextVehicle))
@@ -93,7 +88,7 @@ public class Game {
 	
 	}
 
-	private void placeBiggestVehicles() {
+	public void placeBiggestVehicles() {
 		List<Vehicle> bigVehicles = getVehiclesToPlace().stream().filter(bigVehiclePredicate)
 				.collect(Collectors.toList());
 		for (Vehicle v : bigVehicles) {
@@ -103,13 +98,6 @@ public class Game {
 		vehiclesToPlace.removeAll(bigVehicles);
 	}
 
-	public Level getLevel() {
-		return level;
-	}
-
-	public int getNumberOfVehicles() {
-		return numberOfVehicles;
-	}
 
 	public List<Vehicle> getVehiclesToPlace() {
 		return vehiclesToPlace;

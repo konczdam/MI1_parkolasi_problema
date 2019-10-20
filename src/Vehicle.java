@@ -1,6 +1,10 @@
 
 public class Vehicle implements Comparable<Vehicle> {
 	int number, length, width,area;
+	Position position;
+
+
+
 
 	public Vehicle(int number, int length, int width){
 		this.number = number;
@@ -26,10 +30,25 @@ public class Vehicle implements Comparable<Vehicle> {
 		return area;
 	}
 
+	public Position getPosition() {
+		return position;
+	}
+	
+	
+	public void setPosition(Position position) {
+		this.position = position;
+	}
 
 	@Override
 	public int compareTo(Vehicle o) {
-		return new Integer(o.getArea()).compareTo(new Integer(getArea()));
+		int i = this.getArea(), value = o.getArea();
+		
+		
+		if(value == i)
+			return 0;
+		
+		return value > i ? 1 : -1;
+		
 	}
 	
 	@Override

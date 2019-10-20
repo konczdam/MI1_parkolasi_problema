@@ -13,25 +13,10 @@ public class Level {
 		this.length = length;
 		this.width = width;
 		map = new int[length][width];
-	
 	}
 	
-
-	
-	
 	public void printResult() {
-		for(int i = 0; i < length; i++) {
-			StringBuilder res = new StringBuilder();
-			for(int j = 0; j < width; j++) {
-				res.append(map[i][j]);
-				
-				if(j == width - 1)
-					res.append('\n');
-				else
-					res.append('\t');
-			}
-			System.out.println(res.toString());
-		}
+		System.out.println(this);
 	}
 
 	@Override
@@ -66,7 +51,7 @@ public class Level {
 		List<Position> res = new ArrayList<Position>();
 		for(int i = 0; i < length; i++) {
 			for(int j = 0; j < width; j++) {
-				basic = checkforBasicPosition(i,j, v);
+				basic = checkforBasicPosition(i,j, v); 
 				rotated = checkforRotatedPosition(i,j,v);
 				
 				if(basic != null || rotated != null)
@@ -105,6 +90,7 @@ public class Level {
 	private Position checkforBasicPosition(int y, int x, Vehicle v) {
 		boolean edged = false;
 		int numOfBookedPlaces = 0;
+		
 		for(int i = y; i < Math.min(y + v.length, length); i++) {
 			for(int j = x; j < Math.min(x + v.width, width) ; j++) {
 				numOfBookedPlaces++;
@@ -128,6 +114,7 @@ public class Level {
 	public boolean placeVehicle(Position position, Vehicle v) {
 		if(position == null)
 			return false;
+		v.setPosition(position);
 		Vehicle VehicletoPlace = position.isRotated() ? new Vehicle(v.number, v.width, v.length) : v;
 		
 		for(int i = position.getY(); i < position.getY() + VehicletoPlace.length; i++) {
@@ -152,16 +139,14 @@ public class Level {
 		return width;
 	}
 	
-	
-	public int[][] getMap() {
-		return map;
-	}
 
-	public void removeVehicleFromMap(int number) {
-		for(int i = 0; i < length; i++)
-			for(int j = 0; j < width; j++)
-				if(map[i][j] == number)
-					map[i][j] = 0;
+	public void removeVehicleFromMap(Vehicle vehicle, Position p) {
+		int y = p.getY(), x = p.getX(), length = p.isRotated()? vehicle.width : vehicle.length, width = p.isRotated()? vehicle.length : vehicle.width;
+			for(int i = y; i < y + length; i++)
+				for(int j = x; j < x + width; j++)
+//					if(map[i][j] == number)
+						map[i][j] = 0;
+			
 		
 	}
 
