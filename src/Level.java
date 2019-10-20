@@ -36,16 +36,11 @@ public class Level {
 		
 	}
 
-
-
 	public boolean placeVehicle(Vehicle v) {
 		List<Position> position = getFittingPositin(v);
 		return placeVehicle(position.get(0), v);
 	}
 	
-	
-
-
 	public List<Position> getFittingPositin(Vehicle v) {
 		Position basic, rotated;
 		List<Position> res = new ArrayList<Position>();
@@ -55,11 +50,16 @@ public class Level {
 				rotated = checkforRotatedPosition(i,j,v);
 				
 				if(basic != null || rotated != null)
-					res.addAll(chooseEdgedPosition( basic, rotated ).stream().filter((Position p) -> {
+					res.addAll(chooseEdgedPosition(basic, rotated ).stream().filter((Position p) -> {
 						if(res.isEmpty())
 							return true;
 						Position last = res.get(res.size() -1 );
 						return p.getX() != last.getX() && p.getY() != last.getY();
+						
+						/**
+						 * Két egymás utáni positionnak el kell térnie mind x és y kordinátában. Ez full faszság,
+						 * biztos össze lehet rakni olyan mapot amit így nem oldd meg a program.
+						 */
 					}).collect(Collectors.toList()));
 			}
 		}
@@ -68,7 +68,8 @@ public class Level {
 	}
 
 
-
+// lényegében annyit csinál, hogy ha vmelyik Position-re lerakva a kocsi pont a pálya széléig érne,
+// és a másikkal nem, akkor azt rakja előrébb, amelyikkel a pálya széléig érne.
 	private List<Position> chooseEdgedPosition(Position basic, Position rotated) {
 		List<Position> res = new ArrayList<>();
 		
@@ -124,10 +125,7 @@ public class Level {
 				map[i][j] = v.number;
 			}
 		}
-		
 		return true;
-		
-		
 	}
 
 	public int getLength() {
@@ -144,7 +142,6 @@ public class Level {
 		int y = p.getY(), x = p.getX(), length = p.isRotated()? vehicle.width : vehicle.length, width = p.isRotated()? vehicle.length : vehicle.width;
 			for(int i = y; i < y + length; i++)
 				for(int j = x; j < x + width; j++)
-//					if(map[i][j] == number)
 						map[i][j] = 0;
 			
 		
@@ -168,7 +165,6 @@ public class Level {
 		backup.stream().forEach(v -> {
 			System.out.println(v.number + " elvárt: " + v.getArea() + ", valójában: " + map.get(v.number));
 		});
-		
 		
 	}
 	

@@ -43,7 +43,6 @@ public class Vehicle implements Comparable<Vehicle> {
 	public int compareTo(Vehicle o) {
 		int i = this.getArea(), value = o.getArea();
 		
-		
 		if(value == i)
 			return 0;
 		
@@ -57,14 +56,4 @@ public class Vehicle implements Comparable<Vehicle> {
 		
 	}
 
-	public void rotate() {
-		int temp = width;
-		width = length;
-		length = temp;
-		
-	}
-	
-	
-	
-	
 }
