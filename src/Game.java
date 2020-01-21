@@ -9,71 +9,58 @@ import java.util.stream.IntStream;
 public class Game {
 
 	private Level level;
-	private int numberOfVehicles;
 	private List<Vehicle> vehiclesToPlace;
 	Predicate<Vehicle> bigVehiclePredicate;
 
-	public Game(InputStream inputStrem) {
-		Scanner in = new Scanner(inputStrem);
+	public Game(InputStream inputStream) {
+		Scanner in = new Scanner(inputStream);
 		int length = in.nextInt();
 		int width = in.nextInt();
-
 		level = new Level(length, width);
-
 		initvehicles(in);
 		vehiclesToPlace = vehiclesToPlace.stream().sorted().collect(Collectors.toList());
 		initPredicate();
-		
-
 	}
 
 
 
 	private void initvehicles(Scanner in) {
-		numberOfVehicles = in.nextInt();
-		vehiclesToPlace = new ArrayList<Vehicle>(numberOfVehicles);
+		int numberOfVehicles = in.nextInt();
+		vehiclesToPlace = new ArrayList<>(numberOfVehicles);
 
-		IntStream.range(1, numberOfVehicles + 1).forEach(i -> {
-			vehiclesToPlace.add(new Vehicle(i, in.nextInt(), in.nextInt()));
-		});
+		IntStream.range(1, numberOfVehicles + 1).forEach(i -> vehiclesToPlace.add(new Vehicle(i, in.nextInt(), in.nextInt())));
 		
 	}
 
 	private void initPredicate() {
-		bigVehiclePredicate = new Predicate<Vehicle>() {
-
-			@Override
-			public boolean test(Vehicle t) {
-				return t.length == level.getLength() || t.length == level.getWidth() || t.width == level.getWidth()
-						|| t.width == level.getLength();
-			}
-		};
+		bigVehiclePredicate = t -> t.length == level.getLength() || t.length == level.getWidth() || t.width == level.getWidth()
+				|| t.width == level.getLength();
 	}
 
-	public void printresults() {
+	public void printResults() {
 		level.printResult();
 	}
 
-	public boolean solve() {
+	public boolean solveAndPrintResults() {
 
 		if (vehiclesToPlace.size() == 0) {
-			this.printresults();
+			this.printResults();
 			return true;
 		}
 		
 			Vehicle nextVehicle = vehiclesToPlace.get(0);
 
-			List<Position> fittingPositions = level.getFittingPositin(nextVehicle);
+			List<Position> fittingPositions = level.getFittingPosition(nextVehicle);
 			if (fittingPositions != null && !fittingPositions.isEmpty()) {
 				for (Position p : fittingPositions) {
 					
-					boolean vehiclePlacedSuccesfully = level.placeVehicle(p, nextVehicle);
-					if (!vehiclePlacedSuccesfully)
+					boolean vehiclePlacedSuccessfully = level.placeVehicle(p, nextVehicle);
+					if (!vehiclePlacedSuccessfully)
 						return false;
 					
 					vehiclesToPlace.remove(nextVehicle);
 					
-					if(solve())
+					if(solveAndPrintResults())
 						return true;
 					else 
 						level.removeVehicleFromMap(nextVehicle, p);

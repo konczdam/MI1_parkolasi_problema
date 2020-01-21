@@ -1,7 +1,5 @@
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Level {
@@ -36,18 +34,18 @@ public class Level {
 		
 	}
 
-	public boolean placeVehicle(Vehicle v) {
-		List<Position> position = getFittingPositin(v);
-		return placeVehicle(position.get(0), v);
+	public void placeVehicle(Vehicle v) {
+		List<Position> position = getFittingPosition(v);
+		placeVehicle(position.get(0), v);
 	}
 	
-	public List<Position> getFittingPositin(Vehicle v) {
+	public List<Position> getFittingPosition(Vehicle v) {
 		Position basic, rotated;
 		List<Position> res = new ArrayList<Position>();
 		for(int i = 0; i < length; i++) {
 			for(int j = 0; j < width; j++) {
-				basic = checkforBasicPosition(i,j, v); 
-				rotated = checkforRotatedPosition(i,j,v);
+				basic = checkForBasicPosition(i,j, v);
+				rotated = checkForRotatedPosition(i,j,v);
 				
 				if(basic != null || rotated != null)
 					res.addAll(chooseEdgedPosition(basic, rotated ).stream().filter((Position p) -> {
@@ -88,7 +86,7 @@ public class Level {
 	}
 
 
-	private Position checkforBasicPosition(int y, int x, Vehicle v) {
+	private Position checkForBasicPosition(int y, int x, Vehicle v) {
 		boolean edged = false;
 		int numOfBookedPlaces = 0;
 		
@@ -105,8 +103,8 @@ public class Level {
 		return numOfBookedPlaces == v.getArea()? new Position(false, y,x, edged) : null;
 	}
 
-	private Position checkforRotatedPosition(int i, int j, Vehicle v) {
-		Position res = checkforBasicPosition(i, j, new Vehicle(v.number, v.width, v.length));
+	private Position checkForRotatedPosition(int i, int j, Vehicle v) {
+		Position res = checkForBasicPosition(i, j, new Vehicle(v.number, v.width, v.length));
 		if(res!= null)
 			res.setRotated(true);
 		return res;
@@ -116,10 +114,10 @@ public class Level {
 		if(position == null)
 			return false;
 		v.setPosition(position);
-		Vehicle VehicletoPlace = position.isRotated() ? new Vehicle(v.number, v.width, v.length) : v;
+		Vehicle vehicleToPlace = position.isRotated() ? new Vehicle(v.number, v.width, v.length) : v;
 		
-		for(int i = position.getY(); i < position.getY() + VehicletoPlace.length; i++) {
-			for(int j = position.getX(); j < position.getX() + VehicletoPlace.width ; j++) {
+		for(int i = position.getY(); i < position.getY() + vehicleToPlace.length; i++) {
+			for(int j = position.getX(); j < position.getX() + vehicleToPlace.width ; j++) {
 				if(map[i][j] != 0)
 					throw new RuntimeException("problem");
 				map[i][j] = v.number;
@@ -147,25 +145,4 @@ public class Level {
 		
 	}
 
-	public void validate(List<Vehicle> backup) {
-		Map<Integer, Integer> map = new HashMap<>(backup.size());
-		
-		for(int i = 1; i <= backup.size(); i++)
-			map.put(i, 0);
-		
-		for(int i = 0; i < length; i++)
-			for(int j = 0; j < width; j++) {
-				if(map.get(this.map[i][j]) != null)
-				
-				map.put(
-						this.map[i][j], 
-						map.get(this.map[i][j]) + 1);
-			}
-		
-		backup.stream().forEach(v -> {
-			System.out.println(v.number + " elvárt: " + v.getArea() + ", valójában: " + map.get(v.number));
-		});
-		
-	}
-	
 }

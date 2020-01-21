@@ -3,9 +3,6 @@ public class Vehicle implements Comparable<Vehicle> {
 	int number, length, width,area;
 	Position position;
 
-
-
-
 	public Vehicle(int number, int length, int width){
 		this.number = number;
 		this.length = length;
@@ -13,28 +10,10 @@ public class Vehicle implements Comparable<Vehicle> {
 		area = width*length;
 	}
 
-
-	
-	public int getNumber() {
-		return number;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public int getLength() {
-		return length;
-	}
 	public int getArea() {
 		return area;
 	}
 
-	public Position getPosition() {
-		return position;
-	}
-	
-	
 	public void setPosition(Position position) {
 		this.position = position;
 	}
@@ -42,12 +21,9 @@ public class Vehicle implements Comparable<Vehicle> {
 	@Override
 	public int compareTo(Vehicle o) {
 		int i = this.getArea(), value = o.getArea();
-		
 		if(value == i)
 			return 0;
-		
 		return value > i ? 1 : -1;
-		
 	}
 	
 	@Override
